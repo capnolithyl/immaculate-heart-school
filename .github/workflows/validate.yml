@@ -1,0 +1,32 @@
+name: Validate School Child Theme
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate PHP
+        run: php -l theme/functions.php
+
+      - name: Test packaging and deployment guardrails
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Build school ZIP
+        run: python3 scripts/build_zip.py
+
+      - name: Verify ZIP contents
+        run: |
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          with ZipFile('ihm-school.zip') as archive:
+              names = archive.namelist()
+              assert 'ihm-school/style.css' in names
+              assert 'ihm-school/functions.php' in names
+              assert all(name.startswith('ihm-school/') for name in names)
+          PY

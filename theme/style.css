@@ -1,0 +1,21 @@
+/*
+Theme Name: IHM Grade School
+Theme URI: https://ihmgradeschool.diocesanweb.org/
+Description: A lightweight child theme for Immaculate Heart of Mary Grade School.
+Author: Diocesan
+Author URI: https://diocesan.com/
+Template: ihm
+Version: 0.1.0
+Text Domain: ihm-school
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/*
+ * School-only presentation goes below. The IHM parent theme provides all
+ * compiled Tailwind utilities, blocks, navigation behavior and base layouts.
+ *
+ * Keep this stylesheet small. For a confirmed school color palette, prefer
+ * the child theme.json so Gutenberg and the frontend share design tokens.
+ */

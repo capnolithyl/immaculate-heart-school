@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "python scripts/build_zip.py",
+    "test": "python -m unittest discover -s tests -v",
+    "deploy:setup": "python -m pip install --disable-pip-version-check \"paramiko>=3.5,<5\"",
+    "deploy:upload": "python scripts/deploy_sftp.py",
+    "deploy": "npm run bundle && npm run deploy:upload",
+    "ship": "node scripts/ship.js"
+  }
+}

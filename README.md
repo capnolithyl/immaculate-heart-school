@@ -1,3 +1,46 @@
 # Immaculate Heart of Mary Grade School
 
-A lightweight WordPress child theme for the IHM parent theme (`ihm`). See the setup and deployment instructions in this repository once the initial scaffolding is complete.
+A small WordPress **child theme** of the parish's [IHM parent theme](https://github.com/capnolithyl/immaculate-heart-of-mary). The school has its own independent WordPress installation: **no multisite and no duplicated parent theme code**.
+
+## Install
+
+1. Install the **compiled** parish theme as `wp-content/themes/ihm/` on the school WordPress site. Its production ZIP is `ihm.zip`.
+2. Run `npm run bundle` from this repository. It creates `ihm-school.zip`, containing `ihm-school/style.css` and `ihm-school/functions.php`.
+3. Install the school ZIP through **Appearance → Themes → Add New → Upload Theme**, then activate **IHM Grade School**. Both parent and child must remain installed.
+4. Set menus, site title, homepage, ACF options and content independently in the school WordPress dashboard.
+
+The repository keeps its installable WordPress theme in `theme/`, following the parish's source/build separation. Do not install the **repository root** as a theme.
+
+## Development
+
+- `theme/style.css`: child theme header plus **school-only CSS**. The parish's compiled Tailwind styles are inherited.
+- `theme/functions.php`: child-only hooks. The parent handles blocks, navigation functionality, reusable PHP and JavaScript.
+- Add an identically named file under `theme/template-parts/` only when the school needs different markup. WordPress's `get_template_part()` will prefer the child copy.
+- Colors: the parent already maps Tailwind palette values to WordPress preset CSS variables. Once the final school palette is confirmed, define the school values in a child `theme.json` and test both the site and editor. Keep the existing palette slugs available to parent components; a child palette array may replace the parent's palette entries.
+- Do **not** copy the parent's blocks or CSS build into this repository.
+
+The parent needs a child-compatible stylesheet enqueue (using `get_template_directory_uri() . '/style.css'`) to load its own compiled CSS when the school child theme is active.
+
+## Commands
+
+```powershell
+npm run bundle        # Build ihm-school.zip
+npm run test          # Python package/deployment safety tests
+npm run deploy:setup  # Install Python Paramiko once
+npm run deploy        # Bundle + SFTP upload, without a git push
+npm run ship          # Bundle, commit pending changes, push main, SFTP upload
+```
+
+Requires Node.js for npm/ship and Python 3.9+ for ZIP/SFTP scripts. No Node packages are needed for the child build.
+
+## School SFTP deployment
+
+Create **this repository's own** `.vscode/sftp.json` (gitignored). Use `config/sftp.example.json` as a guide; do not commit server passwords.
+
+The `remotePath` must be the **school installation's** absolute path ending in `/wp-content/themes/ihm-school`. The script refuses `/wp-content/themes/ihm` and other destinations. This prevents the child deployment from overwriting the parent's files, but you must still double-check that the host and earlier directories point to the **school** WordPress installation.
+
+The deployment workflow mirrors the parish's SFTP uploader: extract the ZIP, upload its files, then remove obsolete files **only within the child theme directory**. You can override the config path with `DEPLOY_SFTP_CONFIG` and the ZIP location with `DEPLOY_ZIP_PATH`.
+
+`npm run deploy` does not upload or modify the parent theme. Install/update the parent separately using its own release/deploy workflow.
+
+The ZIP and local credentials are ignored by Git.

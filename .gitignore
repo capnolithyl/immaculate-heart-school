@@ -1,0 +1,14 @@
+# Local WordPress deployment credentials and environment files
+/.vscode/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Only the installable theme/ directory goes into the ZIP
+/ihm-school.zip
+/node_modules/
+__pycache__/
+*.py[cod]
+.DS_Store
