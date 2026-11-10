@@ -19,9 +19,13 @@ def bundle(zip_path: Path = ZIP_PATH) -> Path:
     """Build a ZIP with the canonical WordPress child-theme directory."""
     style_file = THEME_DIR / "style.css"
     functions_file = THEME_DIR / "functions.php"
+    utilities_file = THEME_DIR / "assets" / "css" / "school.css"
 
     if not style_file.is_file() or not functions_file.is_file():
         raise ValueError("theme/style.css and theme/functions.php must exist")
+
+    if not utilities_file.is_file() or not utilities_file.stat().st_size:
+        raise ValueError("compiled school stylesheet is missing. Run npm run build:css first.")
 
     header = style_file.read_text(encoding="utf-8")
     if "Template: ihm" not in header or "Theme Name:" not in header:
