@@ -2,11 +2,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "bundle": "python scripts/build_zip.py",
-    "test": "python -m unittest discover -s tests -v",
+    "bundle": "npm run build:css && python scripts/build_zip.py",
+    "test": "npm run build:css && python -m unittest discover -s tests -v",
     "deploy:setup": "python -m pip install --disable-pip-version-check \"paramiko>=3.5,<5\"",
     "deploy:upload": "python scripts/deploy_sftp.py",
     "deploy": "npm run bundle && npm run deploy:upload",
-    "ship": "node scripts/ship.js"
+    "ship": "node scripts/ship.js",
+    "build:css": "postcss tailwind.css -o theme/assets/css/school.css",
+    "dev": "npm run build:css -- --watch",
+    "watch": "npm run dev"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "tailwindcss": "^4.2.2",
+    "postcss": "^8.5.8",
+    "postcss-cli": "^11.0.1"
   }
 }
