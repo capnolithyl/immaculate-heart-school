@@ -34,8 +34,10 @@ npm run build:css     # Compile only school-specific Tailwind utilities
 npm run bundle        # Compile CSS and build ihm-school.zip
 npm run test          # Python package/deployment safety tests
 npm run deploy:setup  # Install Python Paramiko once
-npm run deploy        # Bundle + SFTP upload, without a git push
-npm run ship          # Bundle, commit pending changes, push main, SFTP upload
+npm run deploy        # Build/upload the SCHOOL CHILD theme only
+npm run deploy:parent # Build/upload the shared IHM PARENT to the school site
+npm run deploy:all    # Build/upload parent, then child, to the school site
+npm run ship          # Bundle, commit/push SCHOOL changes, upload child only
 ```
 
 Requires Node.js for Tailwind/PostCSS/npm/ship and Python 3.9+ for ZIP/SFTP scripts. Run `npm install` after pulling. The parent theme requires its own separate build and install; the school does not compile its PHP blocks or shared CSS.
@@ -46,8 +48,29 @@ Create **this repository's own** `.vscode/sftp.json` (gitignored). Use `config/s
 
 The `remotePath` must be the **school installation's** absolute path ending in `/wp-content/themes/ihm-school`. The script refuses `/wp-content/themes/ihm` and other destinations. This prevents the child deployment from overwriting the parent's files, but you must still double-check that the host and earlier directories point to the **school** WordPress installation.
 
-The deployment workflow mirrors the parish's SFTP uploader: extract the ZIP, upload its files, then remove obsolete files **only within the child theme directory**. You can override the config path with `DEPLOY_SFTP_CONFIG` and the ZIP location with `DEPLOY_ZIP_PATH`.
+The normal child deployment mirrors the parish's SFTP uploader: extract the ZIP, upload its files, then remove obsolete files **only within the child theme directory**. You can override the config path with `DEPLOY_SFTP_CONFIG` and the ZIP location with `DEPLOY_ZIP_PATH`.
 
-`npm run deploy` does not upload or modify the parent theme. Install/update the parent separately using its own release/deploy workflow.
+### Deploy the parent to the school site
+
+Keep the two repositories next to one another:
+
+```text
+Immaculate Heart of Mary - Cuyahoga, OH/
+├── immaculate-heart-of-mary/     # shared parent source
+└── immaculate-heart-school/      # school child source + school SFTP config
+```
+
+From the **school** repository, run `npm run deploy:parent`. This command:
+
+1. Validates **the school's** `.vscode/sftp.json` (its `remotePath` must end in `/wp-content/themes/ihm-school`).
+2. Runs `npm run bundle` inside the sibling **parent** repository. Install the parent's Node dependencies with `npm install` in that directory first.
+3. Validates the generated parent `ihm.zip` contains only the `ihm/` theme and the expected WordPress files.
+4. Invokes the **existing parent SFTP uploader**, passing the school's config and parent ZIP as environment overrides. It deploys to the **school installation's** `wp-content/themes/ihm/`, leaving `ihm-school/` untouched.
+
+To deploy both in the correct order, run `npm run deploy:all`; this runs parent deployment followed by the usual child deployment. `npm run deploy` and `npm run ship` remain **child-only**. Neither new command commits or pushes to the parent repository, and neither deploys to the parish unless you accidentally point the *school's* SFTP credentials/path there.
+
+**Check the actual SFTP host and web root carefully** before deploying: matching `/wp-content/themes/ihm-school` alone cannot prove an SFTP server belongs to the school. The parent upload will synchronize/prune obsolete files **inside the school's `ihm/` directory**. If `DEPLOY_SFTP_CONFIG` is set, it must point to the school's configuration, not the parish's.
+
+The parent still has its own independent release and deployment workflow for the parish website.
 
 The ZIP and local credentials are ignored by Git.
