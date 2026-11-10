@@ -1,0 +1,48 @@
+/*
+ * School-only Tailwind utilities.
+ *
+ * The IHM parent theme already supplies Preflight, base styles, and a large
+ * set of utilities. Compile only utilities referenced by the school child.
+ * Never import the full Tailwind framework (or its Preflight) here.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@reference "tailwindcss";
+@source "./theme";
+
+/*
+ * Compile-time aliases for IHM's existing WordPress design tokens.
+ * The actual values come from the active site's theme.json presets.
+ * Maintain these aliases only for classes introduced by school templates.
+ */
+@theme inline {
+  --color-background: var(--wp--preset--color--background);
+  --color-foreground: var(--wp--preset--color--foreground);
+  --color-navy: var(--wp--preset--color--navy);
+  --color-gold: var(--wp--preset--color--gold);
+  --color-gold-light: var(--wp--preset--color--gold-light);
+  --color-gold-dark: var(--wp--preset--color--gold-dark);
+  --color-blue: var(--wp--preset--color--blue);
+  --color-green: var(--wp--preset--color--green);
+  --color-green-dark: var(--wp--preset--color--green-dark);
+  --color-muted: var(--wp--preset--color--muted);
+  --color-footer-muted: var(--wp--preset--color--footer-muted);
+  --color-white: var(--wp--preset--color--white);
+
+  --font-body: var(--wp--preset--font-family--body);
+  --font-heading: var(--wp--preset--font-family--heading);
+  --font-editorial: var(--wp--preset--font-family--editorial);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
+
+  --container-content: var(--wp--style--global--content-size);
+  --container-wide: var(--wp--style--global--wide-size);
+  --container-main: 68rem;
+  --container-section: 70rem;
+  --container-shell: 90rem;
+  --breakpoint-2xl: 90rem;
+  --text-hero: clamp(2rem, calc(0.71rem + 5.29vw), 4.375rem);
+  --text-section: clamp(1.75rem, calc(1.31rem + 1.8vw), 2.75rem);
+  --text-feature: 2.1875rem;
+  --text-card-title: 1.375rem;
+}
