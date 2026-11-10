@@ -11,14 +11,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Tailwind/PostCSS
+        run: npm install --no-audit --no-fund
+
       - name: Validate PHP
         run: php -l theme/functions.php
 
       - name: Test packaging and deployment guardrails
-        run: python3 -m unittest discover -s tests -v
+        run: npm run test
 
       - name: Build school ZIP
-        run: python3 scripts/build_zip.py
+        run: npm run bundle
 
       - name: Verify ZIP contents
         run: |
@@ -28,5 +36,6 @@ jobs:
               names = archive.namelist()
               assert 'ihm-school/style.css' in names
               assert 'ihm-school/functions.php' in names
+              assert 'ihm-school/assets/css/school.css' in names
               assert all(name.startswith('ihm-school/') for name in names)
           PY

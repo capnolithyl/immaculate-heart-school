@@ -31,8 +31,30 @@ class SchoolThemeBuildTests(unittest.TestCase):
                 names = archive.namelist()
                 self.assertIn("ihm-school/style.css", names)
                 self.assertIn("ihm-school/functions.php", names)
+                self.assertIn("ihm-school/assets/css/school.css", names)
                 self.assertTrue(all(name.startswith("ihm-school/") for name in names))
                 self.assertFalse(any("scripts/" in name or ".vscode" in name for name in names))
+
+    def test_school_css_does_not_include_a_duplicate_reset(self):
+        source = (ROOT / "tailwind.css").read_text(encoding="utf-8")
+        self.assertIn("source(none)", source)
+        self.assertIn('@source "./theme"', source)
+        self.assertNotIn('@import "tailwindcss";', source)
+        self.assertNotIn('@import "tailwindcss/preflight', source)
+
+    def test_bundle_rejects_missing_compiled_styles(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            previous = build.THEME_DIR
+            try:
+                build.THEME_DIR = Path(temp_dir)
+                (build.THEME_DIR / "style.css").write_text(
+                    "/* Theme Name: Test\\nTemplate: ihm */", encoding="utf-8"
+                )
+                (build.THEME_DIR / "functions.php").write_text("<?php", encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "compiled school stylesheet"):
+                    build.bundle(Path(temp_dir) / "test.zip")
+            finally:
+                build.THEME_DIR = previous
 
     def test_child_declares_correct_parent(self):
         header = (ROOT / "theme" / "style.css").read_text(encoding="utf-8")
