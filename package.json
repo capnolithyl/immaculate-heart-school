@@ -10,7 +10,9 @@
     "ship": "node scripts/ship.js",
     "build:css": "postcss tailwind.css -o theme/assets/css/school.css",
     "dev": "npm run build:css -- --watch",
-    "watch": "npm run dev"
+    "watch": "npm run dev",
+    "deploy:parent": "python -m scripts.deploy_parent",
+    "deploy:all": "npm run deploy:parent && npm run deploy"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
