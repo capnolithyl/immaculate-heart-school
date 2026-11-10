@@ -1,0 +1,1 @@
+"""School theme deployment scripts."""
