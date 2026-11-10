@@ -23,7 +23,7 @@ jobs:
         run: php -l theme/functions.php
 
       - name: Test packaging and deployment guardrails
-        run: python3 -m unittest discover -s tests -v
+        run: npm run test
 
       - name: Build school ZIP
         run: npm run bundle
