@@ -120,3 +120,42 @@ body:has(.ihm-hero) .ihm-hero {
 @media (prefers-reduced-motion: reduce) {
   .ihms-header__nav { transition: none; }
 }
+
+/* The Figma tour tab sits on the right edge of the homepage hero. */
+.ihms-tour-tab {
+  position: fixed;
+  z-index: 45;
+  right: 0;
+  top: min(68vh, 38rem);
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  border-radius: 999px 0 0 999px;
+  border: 1px solid var(--wp--preset--color--gold, #f5cc1a);
+  border-right: 0;
+  background: var(--wp--preset--color--navy, #024725);
+  color: var(--wp--preset--color--gold, #f5cc1a);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--wp--preset--font-family--body, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.ihms-tour-tab:hover {
+  background: #013d21;
+  color: #ffffff;
+}
+.ihms-tour-tab:focus-visible {
+  outline: 2px solid var(--wp--preset--color--gold, #f5cc1a);
+  outline-offset: 3px;
+}
+@media (max-width: 47.999rem) {
+  .ihms-tour-tab {
+    top: auto;
+    bottom: 2.5rem;
+    font-size: 0.75rem;
+    padding: 0.625rem 1rem;
+  }
+}
