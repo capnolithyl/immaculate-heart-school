@@ -5,7 +5,7 @@ Description: A lightweight child theme for Immaculate Heart of Mary Grade School
 Author: Diocesan
 Author URI: https://diocesan.com/
 Template: ihm
-Version: 0.2.0
+Version: 0.3.0
 Text Domain: ihm-school
 Requires PHP: 8.0
 License: GNU General Public License v2 or later
@@ -20,3 +20,103 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Keep this stylesheet small. For a confirmed school color palette, prefer
  * the child theme.json so Gutenberg and the frontend share design tokens.
  */
+
+/* Figma school header: deep green top bar and translucent navigation. */
+.ihms-header {
+  --ihms-header-height: 9rem;
+  height: var(--ihms-header-height);
+  isolation: isolate;
+}
+
+.ihms-header__bar {
+  background: var(--wp--preset--color--navy, #024725);
+}
+
+.ihms-header__nav {
+  background: rgba(12, 12, 12, 0.6);
+  transition: background-color 180ms ease;
+}
+
+.ihms-header[data-scrolled="true"] .ihms-header__nav {
+  background: rgba(2, 71, 37, 0.97);
+}
+
+.ihms-header__logo {
+  display: block;
+  width: clamp(7.5rem, 16.4vw, 13.0625rem);
+  height: auto;
+  max-height: 5.4375rem;
+  object-fit: contain;
+}
+
+.ihms-header__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.ihms-header__links a:hover,
+.ihms-header__links a[aria-current="page"],
+.ihms-header__links a:focus-visible {
+  color: var(--wp--preset--color--gold, #f5cc1a);
+}
+
+.ihms-header a:focus-visible,
+.ihms-header button:focus-visible {
+  outline: 2px solid var(--wp--preset--color--gold, #f5cc1a);
+  outline-offset: 4px;
+}
+
+/* The homepage hero begins beneath the school header, matching the Figma. */
+body:has(.ihm-hero) .ihms-header {
+  margin-bottom: calc(-1 * var(--ihms-header-height));
+}
+
+body:has(.ihm-hero) .ihm-hero {
+  padding-top: var(--ihms-header-height);
+}
+
+/* Figma school palette; keep text legible on the bright yellow accent. */
+.ihms-school-footer {
+  background: var(--wp--preset--color--navy, #024725);
+  color: #fff;
+}
+
+.ihms-school-footer a:hover,
+.ihms-school-footer a:focus-visible {
+  color: var(--wp--preset--color--gold, #f5cc1a);
+}
+
+.ihms-school-footer a:focus-visible {
+  outline: 2px solid var(--wp--preset--color--gold, #f5cc1a);
+  outline-offset: 4px;
+}
+
+.ihms-school-footer__heading {
+  color: var(--wp--preset--color--gold, #f5cc1a);
+  letter-spacing: 0.06em;
+}
+
+.ihms-school-footer__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ihms-school-footer__menu li + li {
+  margin-top: 0.65rem;
+}
+
+.ihms-school-footer__menu a {
+  text-decoration: none;
+}
+
+@media (max-width: 63.999rem) {
+  .ihms-header { --ihms-header-height: 7.375rem; }
+  .ihms-header__nav { background: rgba(12, 12, 12, 0.8); }
+  .ihms-header__logo { width: clamp(6.5rem, 28vw, 9rem); max-height: 4.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ihms-header__nav { transition: none; }
+}

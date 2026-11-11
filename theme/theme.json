@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "custom": false,
+      "customDuotone": false,
+      "customGradient": false,
+      "defaultDuotone": false,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "palette": [
+        {
+          "slug": "background",
+          "color": "#FFFFFF",
+          "name": "School White"
+        },
+        {
+          "slug": "foreground",
+          "color": "#232323",
+          "name": "Text"
+        },
+        {
+          "slug": "navy",
+          "color": "#024725",
+          "name": "School Deep Green"
+        },
+        {
+          "slug": "gold",
+          "color": "#F5CC1A",
+          "name": "School Yellow"
+        },
+        {
+          "slug": "gold-light",
+          "color": "#F5CC1A",
+          "name": "School Yellow Light"
+        },
+        {
+          "slug": "gold-dark",
+          "color": "#C9A84C",
+          "name": "Muted Gold"
+        },
+        {
+          "slug": "blue",
+          "color": "#2E97CC",
+          "name": "Calendar Blue"
+        },
+        {
+          "slug": "green",
+          "color": "#024725",
+          "name": "School Green"
+        },
+        {
+          "slug": "green-dark",
+          "color": "#013D21",
+          "name": "Deep Green Shade"
+        },
+        {
+          "slug": "muted",
+          "color": "#606367",
+          "name": "Muted"
+        },
+        {
+          "slug": "footer-muted",
+          "color": "#E2EEE7",
+          "name": "Footer Muted"
+        },
+        {
+          "slug": "white",
+          "color": "#FFFFFF",
+          "name": "White"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var(--wp--preset--color--background)",
+      "text": "var(--wp--preset--color--foreground)"
+    }
+  }
+}

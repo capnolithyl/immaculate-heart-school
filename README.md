@@ -74,3 +74,20 @@ To deploy both in the correct order, run `npm run deploy:all`; this runs parent 
 The parent still has its own independent release and deployment workflow for the parish website.
 
 The ZIP and local credentials are ignored by Git.
+
+## School Figma implementation (v0.3.0)
+
+The school child theme owns all school-specific changes. The parish parent repository is unchanged.
+
+- `theme/theme.json` overrides the shared WordPress palette slugs with the Figma school green `#024725`, yellow `#F5CC1A`, and white background. Existing parent Tailwind classes inherit these tokens.
+- `theme/template-parts/layout/header-content.php` replaces only the header markup with the school contact strip, official Figma logo, and translucent navigation bar. It preserves `data-site-header`, `data-nav-toggle` and the original parent navigation drawer/JavaScript.
+- `theme/template-parts/header/utility-nav.php` renders the school's editor-managed Header Links in one row on desktop and beneath the main navigation in the mobile drawer. Use **Appearance → Menus → Header Links**, up to five entries.
+- `theme/template-parts/layout/footer-content.php` replaces the parish-specific Mass Schedule column with a school Drop Off Schedule and contact details, while reusing the existing WordPress footer menu and social settings.
+- `theme/inc/school-options.php` adds **Theme Settings → School** once ACF Pro is active: optional logo override, Schedule a Tour link and editable drop-off times. School contact address/phone still use the existing IHM theme options.
+- The parent theme's floating Mass Schedule is disabled on the school site through its documented filter.
+
+The Figma logo is included locally in `theme/assets/images/school-logo.png`; there are no runtime Figma URLs.
+
+### Follow-up content
+
+Use the reviewed Remote WP Bridge JSON seed plan separately. Activate ACF Pro and other school plugins before importing ACF content/options; the current schema reports ACF inactive. The seed uses WordPress native draft content and menus so it can be imported without requiring fabricated images or staff biographies.
