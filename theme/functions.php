@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'IHMS_VERSION' ) ) {
-    define( 'IHMS_VERSION', '0.3.0' );
+    define( 'IHMS_VERSION', '0.3.1' );
 }
 
 /**
@@ -60,6 +60,9 @@ add_action( 'after_setup_theme', 'ihms_register_editor_styles', 20 );
  */
 require_once get_stylesheet_directory() . '/inc/school-options.php';
 
+// The parish-only Mass Times settings page and popup should never appear in
+// the school's admin/frontend. Keep the shared parent theme site-agnostic.
+add_filter( 'ihm_enable_mass_times_options', '__return_false' );
 add_filter( 'ihm_show_mass_schedule', '__return_false' );
 /**
  * School-specific floating tour action. Keep the destination editor-managed.
