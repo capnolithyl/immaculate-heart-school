@@ -12,8 +12,11 @@ $ihms_schedule = function_exists( 'get_field' ) ? get_field( 'school_drop_off_sc
 $ihms_privacy = get_privacy_policy_url();
 $ihms_tel = $ihms_phone ? preg_replace( '/[^0-9+]/', '', $ihms_phone ) : '';
 ?>
-<footer id="colophon" class="ihms-school-footer not-prose relative overflow-hidden">
-    <div class="relative mx-auto w-full max-w-7xl px-6 py-12 lg:px-10 xl:px-12">
+<footer id="colophon" class="ihms-school-footer not-prose relative isolate overflow-hidden">
+    <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/ihm-watermark.png' ); ?>"
+         alt="" aria-hidden="true" loading="lazy"
+         class="pointer-events-none absolute -bottom-32 -right-32 z-0 w-[42rem] max-w-none opacity-[0.045]">
+    <div class="relative z-10 mx-auto w-full max-w-7xl px-6 py-12 lg:px-10 xl:px-12">
         <div class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1.35fr_1.5fr]">
             <div>
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>"
