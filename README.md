@@ -85,6 +85,7 @@ The school child theme owns all school-specific changes. The parish parent repos
 - `theme/template-parts/layout/footer-content.php` replaces the parish-specific Mass Schedule column with a school Drop Off Schedule and contact details, while reusing the existing WordPress footer menu and social settings.
 - `theme/inc/school-options.php` adds **Theme Settings → School** once ACF Pro is active: optional logo override, Schedule a Tour link and editable drop-off times. School contact address/phone still use the existing IHM theme options.
 - The parent theme's floating Mass Schedule is disabled on the school site through its documented filter.
+- The parish-only **Mass Times admin page** is also disabled on the school site through `ihm_enable_mass_times_options` (requires parent theme **v0.7.81+**). The parent registers its Theme Settings root before its Footer and School subpages to prevent broken submenu links. The school keeps **Theme Settings → Theme Settings, Footer, School** and does not offer Mass Times. If the School submenu is missing, check that the current child theme is active and ACF Pro is active.
 
 The Figma logo is included locally in `theme/assets/images/school-logo.png`; there are no runtime Figma URLs.
 
