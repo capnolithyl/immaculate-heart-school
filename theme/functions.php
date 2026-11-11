@@ -61,6 +61,34 @@ add_action( 'after_setup_theme', 'ihms_register_editor_styles', 20 );
 require_once get_stylesheet_directory() . '/inc/school-options.php';
 
 add_filter( 'ihm_show_mass_schedule', '__return_false' );
+/**
+ * School-specific floating tour action. Keep the destination editor-managed.
+ * Only show the action when a valid link has been configured.
+ */
+function ihms_render_tour_action(): void {
+    if ( ! is_front_page() || ! function_exists( 'get_field' ) ) {
+        return;
+    }
+
+    $link = get_field( 'school_tour_link', 'option' );
+    if ( ! is_array( $link ) || empty( $link['url'] ) ) {
+        return;
+    }
+
+    $target = ( $link['target'] ?? '' ) === '_blank' ? '_blank' : '_self';
+    $label  = ! empty( $link['title'] ) ? $link['title'] : __( 'Schedule a Tour', 'ihm-school' );
+    ?>
+    <a class="ihms-tour-tab"
+       href="<?php echo esc_url( $link['url'] ); ?>"
+       target="<?php echo esc_attr( $target ); ?>"
+       <?php if ( '_blank' === $target ) : ?>rel="noopener noreferrer"<?php endif; ?>>
+       <?php echo esc_html( $label ); ?>
+    </a>
+    <?php
+}
+add_action( 'wp_footer', 'ihms_render_tour_action', 5 );
+
+
 
 /**
  * Render the Figma logo with an optional school-specific ACF media override.
