@@ -24,18 +24,18 @@ class SchoolOptionsMenuTests(unittest.TestCase):
         source = (ROOT / "theme" / "inc" / "school-options.php").read_text(
             encoding="utf-8"
         )
-        self.assertRegex(source, r"'menu_slug'\\s*=>\\s*'ihms-school-settings'")
-        self.assertRegex(source, r"'parent_slug'\\s*=>\\s*'theme-settings'")
+        self.assertRegex(source, r"'menu_slug'\s*=>\s*'ihms-school-settings'")
+        self.assertRegex(source, r"'parent_slug'\s*=>\s*'theme-settings'")
         self.assertRegex(
             source,
-            r"add_action\\( 'acf/init', 'ihms_register_school_settings', 25 \\)",
+            r"add_action\( 'acf/init', 'ihms_register_school_settings', 25 \)",
         )
 
     def test_child_versions_match(self):
         functions = (ROOT / "theme" / "functions.php").read_text(encoding="utf-8")
         styles = (ROOT / "theme" / "style.css").read_text(encoding="utf-8")
-        defined = re.search(r"define\\( 'IHMS_VERSION', '([^']+)' \\)", functions)
-        declared = re.search(r"Version: (\\d+\\.\\d+\\.\\d+)", styles)
+        defined = re.search(r"define\( 'IHMS_VERSION', '([^']+)' \)", functions)
+        declared = re.search(r"Version: (\d+\.\d+\.\d+)", styles)
         self.assertIsNotNone(defined)
         self.assertIsNotNone(declared)
         self.assertEqual(defined.group(1), declared.group(1))
