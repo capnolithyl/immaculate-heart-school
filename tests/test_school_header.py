@@ -95,6 +95,18 @@ class SchoolHeaderTests(unittest.TestCase):
         self.assertIn('rel="noopener noreferrer"', self.functions)
         self.assertIn("focus-visible:outline-gold", self.functions)
 
+    def test_mobile_drawer_closes_on_desktop_resize(self):
+        script = (THEME / "assets/js/school-navigation.js").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("matchMedia('(min-width: 64rem)')", script)
+        self.assertIn("drawer.querySelector('[data-nav-close]')?.click()", script)
+        self.assertIn("breakpoint.addEventListener('change', closeOnDesktop)", script)
+        self.assertNotIn("data-nav-toggle", script)
+        self.assertIn("'ihms-navigation'", self.functions)
+        self.assertIn("array( 'ihm-script' )", self.functions)
+        self.assertIn("/assets/js/school-navigation.js", self.functions)
+
     def test_parent_theme_is_only_a_dependency(self):
         self.assertIn("Template: ihm", self.styles)
         self.assertIn("get_template_part( 'template-parts/header/primary', 'nav' )", self.header)
