@@ -75,13 +75,14 @@ The parent still has its own independent release and deployment workflow for the
 
 The ZIP and local credentials are ignored by Git.
 
-## School Figma implementation (v0.3.0)
+## School Figma implementation (v0.3.2)
 
 The school child theme owns all school-specific changes. The parish parent repository is unchanged.
 
 - `theme/theme.json` overrides the shared WordPress palette slugs with the Figma school green `#024725`, yellow `#F5CC1A`, and white background. Existing parent Tailwind classes inherit these tokens.
 - `theme/template-parts/layout/header-content.php` uses the Figma green contact strip with the **phone and ACF social links visible**, plus the school logo and translucent navigation. The hamburger is **mobile-only**; on desktop there is one horizontal menu with no parish-style second navigation.
 - `theme/template-parts/header/utility-nav.php` (desktop) and `theme/template-parts/header/primary-nav.php` (mobile) render **the same WordPress menu**. Assign it under **Appearance → Menus → Manage Locations → Header Links**. If that location is unassigned, the theme temporarily falls back to Primary for compatibility, but never renders both menus. The mobile drawer keeps the parent's submenu, Escape and focus-management JavaScript. The separate parish Primary menu is not shown alongside Header Links.
+- `theme/assets/js/school-navigation.js` is a tiny school-only resize guard. It closes the mobile drawer via the parent's own close handler when the viewport grows to desktop size; no separate drawer implementation is introduced.
 - `theme/template-parts/layout/footer-content.php` replaces the parish-specific Mass Schedule column with a school Drop Off Schedule and contact details, while reusing the existing WordPress footer menu and social settings.
 - `theme/inc/school-options.php` adds **Theme Settings → School** once ACF Pro is active: optional logo override, Schedule a Tour link and editable drop-off times. Set **Theme Settings → Theme Settings → Parish Information → Phone / Address** and **Social Media → Social Media Links** for the top bar and footer. These are shared field definitions but values belong to the school installation. Facebook, Instagram and YouTube icons render even when the Font Awesome field isn't populated; links still require an ACF URL.
 - The parent theme's floating Mass Schedule is disabled on the school site through its documented filter.
