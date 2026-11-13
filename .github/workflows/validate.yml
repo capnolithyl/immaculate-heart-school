@@ -23,6 +23,9 @@ jobs:
         run: |
           find theme -type f -name '*.php' -print0 | xargs -0 -n1 php -l
 
+      - name: Validate school-only navigation JavaScript
+        run: node --check theme/assets/js/school-navigation.js
+
       - name: Test packaging and deployment guardrails
         run: npm run test
 
@@ -38,5 +41,7 @@ jobs:
               assert 'ihm-school/style.css' in names
               assert 'ihm-school/functions.php' in names
               assert 'ihm-school/assets/css/school.css' in names
+              assert 'ihm-school/assets/js/school-navigation.js' in names
+              assert 'ihm-school/template-parts/header/primary-nav.php' in names
               assert all(name.startswith('ihm-school/') for name in names)
           PY
