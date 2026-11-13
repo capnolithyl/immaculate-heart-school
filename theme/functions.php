@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'IHMS_VERSION' ) ) {
-    define( 'IHMS_VERSION', '0.3.1' );
+    define( 'IHMS_VERSION', '0.3.2' );
 }
 
 /**
@@ -120,7 +120,51 @@ function ihms_school_logo(): void {
 }
 
 /**
- * Shared school header/footer social-link renderer using existing IHM options.
+ * One school menu on both screen sizes.
+ *
+ * Editors already manage the school's main links at Appearance -> Menus ->
+ * Header Links. Primary is a compatibility fallback for older school installs;
+ * never render both locations in the same header.
+ */
+function ihms_navigation_location(): string {
+    if ( has_nav_menu( 'header' ) ) {
+        return 'header';
+    }
+
+    return has_nav_menu( 'primary' ) ? 'primary' : '';
+}
+
+/**
+ * Prefer recognizable, locally rendered brand icons, independent of whether
+ * the ACF Font Awesome field has been filled or its icon font has loaded.
+ * Unknown platforms use their validated icon markup (if supplied), then a
+ * generic link icon. All links and labels still come from the ACF repeater.
+ */
+function ihms_social_icon_markup( string $url, string $label, string $icon = '' ): string {
+    $identifier = strtolower( $url . ' ' . $label . ' ' . $icon );
+
+    if ( false !== strpos( $identifier, 'facebook' ) || false !== strpos( $identifier, 'fb.com' ) ) {
+        return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13.7 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.3-1.5 1.6-1.5H17V3.6a24 24 0 0 0-2.4-.1c-2.5 0-4.2 1.5-4.2 4.3v2.1H7.7V13h2.7v8h3.3z"></path></svg>';
+    }
+
+    if ( false !== strpos( $identifier, 'instagram' ) ) {
+        return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><rect x="2.5" y="2.5" width="19" height="19" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.75" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>';
+    }
+
+    if ( false !== strpos( $identifier, 'youtube' ) || false !== strpos( $identifier, 'youtu.be' ) ) {
+        return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><rect x="2" y="5.5" width="20" height="13" rx="4"></rect><path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"></path></svg>';
+    }
+
+    if ( '' !== $icon ) {
+        return wp_kses( $icon, array( 'i' => array( 'class' => true, 'aria-hidden' => true ) ) );
+    }
+
+    return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-1.7 1.7"></path><path d="M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg>';
+}
+
+/**
+ * The same editor-managed social sources are used by school top bar, mobile
+ * drawer and footer. No site-specific URLs or social accounts in the theme.
  */
 function ihms_social_links( string $class = '' ): void {
     $items = function_exists( 'get_field' ) ? get_field( 'social_media_links', 'option' ) : array();
@@ -129,26 +173,38 @@ function ihms_social_links( string $class = '' ): void {
         return;
     }
 
-    echo '<ul class="' . esc_attr( trim( 'm-0 flex list-none items-center gap-3 p-0 ' . $class ) ) .
-        '" aria-label="' . esc_attr__( 'Social media', 'ihm-school' ) . '">';
-
-    foreach ( $items as $item ) {
-        $link = $item['link'] ?? array();
-        $url  = is_array( $link ) ? ( $link['url'] ?? '' ) : $link;
-        $icon = (string) ( $item['icon'] ?? '' );
-        if ( ! $url || ! $icon ) {
-            continue;
+    $valid_items = array_filter( $items, static function ( $item ): bool {
+        if ( ! is_array( $item ) ) {
+            return false;
         }
-        $label  = is_array( $link ) ? ( $link['title'] ?? 'Social media' ) : 'Social media';
-        $target = is_array( $link ) && ( $link['target'] ?? '' ) === '_blank' ? '_blank' : '_self';
-        printf(
-            '<li><a class="inline-flex size-8 items-center justify-center rounded-full border border-white/20 text-white hover:text-gold focus-visible:outline-2 focus-visible:outline-gold" href="%s" aria-label="%s" target="%s"%s>%s</a></li>',
-            esc_url( $url ),
-            esc_attr( $label ),
-            esc_attr( $target ),
-            '_blank' === $target ? ' rel="noopener noreferrer"' : '',
-            wp_kses( $icon, array( 'i' => array( 'class' => true, 'aria-hidden' => true ) ) )
-        );
+        $link = $item['link'] ?? '';
+        $url  = is_array( $link ) ? ( $link['url'] ?? '' ) : $link;
+        return is_string( $url ) && '' !== trim( $url ) && '' !== esc_url( $url );
+    } );
+
+    if ( ! $valid_items ) {
+        return;
     }
-    echo '</ul>';
+    ?>
+    <ul class="<?php echo esc_attr( trim( 'ihms-social-links m-0 flex list-none items-center gap-3 p-0 ' . $class ) ); ?>"
+        aria-label="<?php esc_attr_e( 'Social media', 'ihm-school' ); ?>">
+        <?php foreach ( $valid_items as $item ) : ?>
+            <?php
+            $link   = $item['link'];
+            $url    = is_array( $link ) ? $link['url'] : $link;
+            $label  = is_array( $link ) && ! empty( $link['title'] ) ? (string) $link['title'] : __( 'Social media', 'ihm-school' );
+            $target = is_array( $link ) && ( $link['target'] ?? '' ) === '_blank' ? '_blank' : '_self';
+            $icon   = is_string( $item['icon'] ?? null ) ? $item['icon'] : '';
+            ?>
+            <li class="m-0 list-none p-0">
+                <a class="ihms-social-links__link inline-flex size-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white hover:text-gold focus-visible:outline-2 focus-visible:outline-gold"
+                   href="<?php echo esc_url( $url ); ?>"
+                   aria-label="<?php echo esc_attr( $label ); ?>"
+                   <?php if ( '_blank' === $target ) : ?>target="_blank" rel="noopener noreferrer"<?php endif; ?>>
+                    <?php echo ihms_social_icon_markup( $url, $label, $icon ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static or sanitized icon ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    <?php
 }
