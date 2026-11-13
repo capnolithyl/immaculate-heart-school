@@ -43,6 +43,18 @@ function ihms_enqueue_styles(): void {
 }
 add_action( 'wp_enqueue_scripts', 'ihms_enqueue_styles', 20 );
 
+/** Release the mobile drawer if the user resizes to a desktop viewport. */
+function ihms_enqueue_navigation(): void {
+    wp_enqueue_script(
+        'ihms-navigation',
+        get_stylesheet_directory_uri() . '/assets/js/school-navigation.js',
+        array( 'ihm-script' ),
+        IHMS_VERSION,
+        true
+    );
+}
+add_action( 'wp_enqueue_scripts', 'ihms_enqueue_navigation', 30 );
+
 /**
  * Make school-only utilities available to the block/classic editors as well.
  * The parent remains responsible for its own editor stylesheet.
