@@ -5,7 +5,7 @@ Description: A lightweight child theme for Immaculate Heart of Mary Grade School
 Author: Diocesan
 Author URI: https://diocesan.com/
 Template: ihm
-Version: 0.3.1
+Version: 0.3.2
 Text Domain: ihm-school
 Requires PHP: 8.0
 License: GNU General Public License v2 or later
@@ -47,6 +47,92 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
   height: auto;
   max-height: 5.4375rem;
   object-fit: contain;
+}
+
+/* wp_nav_menu generates this list; desktop and mobile draw from the same
+ * school menu location. No second parish-style navigation on desktop. */
+.ihms-header__menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.875rem, 2vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ihms-header__menu > li {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-shrink: 0;
+}
+
+.ihms-header__menu > li > a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: #fff;
+  font-family: var(--wp--preset--font-family--body, sans-serif);
+  font-size: clamp(0.875rem, 1.55vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Optional second-level WordPress items stay keyboard accessible without
+ * adding a second menu or copying the parent's navigation JavaScript. */
+.ihms-header__menu .sub-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  min-width: 12rem;
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--wp--preset--color--navy, #024725);
+  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 20%);
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 150ms ease, visibility 150ms ease;
+}
+
+.ihms-header__menu li:is(:hover, :focus-within) > .sub-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.ihms-header__menu .sub-menu a {
+  display: block;
+  padding: 0.625rem 0.75rem;
+  color: white;
+  font-family: var(--wp--preset--font-family--body, sans-serif);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Same 32px circular social controls as Figma, visible in the header.
+ * Hide neither the phone nor social icons on mobile; the address yields
+ * space on smaller screens. */
+.ihms-header__social {
+  justify-self: end;
+}
+
+.ihms-header__social .ihms-social-links__link {
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.ihms-header__social .ihms-social-links__link:hover {
+  background: rgb(255 255 255 / 12%);
 }
 
 .ihms-header__links a {
@@ -118,7 +204,11 @@ body:has(.ihm-hero) .ihm-hero {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ihms-header__nav { transition: none; }
+  .ihms-header__nav,
+  .ihms-header__menu .sub-menu,
+  .ihms-header__social .ihms-social-links__link {
+    transition: none;
+  }
 }
 
 /* The Figma tour tab sits on the right edge of the homepage hero. */
