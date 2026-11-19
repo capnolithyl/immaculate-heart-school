@@ -31,6 +31,13 @@ class SchoolDesignTests(unittest.TestCase):
         self.assertIn("data-nav-drawer", drawer)
         self.assertIn("data-nav-submenus", drawer)
         self.assertIn("has_nav_menu( 'header' )", funcs)
+        self.assertNotIn("has_nav_menu( 'primary' )", funcs)
+        self.assertIn("unregister_nav_menu( 'primary' )", funcs)
+        self.assertIn("register_nav_menu( 'header'", funcs)
+        school_css = (THEME / "style.css").read_text(encoding="utf-8")
+        self.assertIn("@media (min-width: 64rem)", school_css)
+        self.assertIn(".ihms-header .ihms-header__links", school_css)
+        self.assertIn("display: block;", school_css)
         self.assertIn("ihm_show_mass_schedule", funcs)
 
     def test_editable_school_specific_options_and_footer(self):

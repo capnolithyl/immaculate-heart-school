@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'IHMS_VERSION' ) ) {
-    define( 'IHMS_VERSION', '0.3.2' );
+    define( 'IHMS_VERSION', '0.3.3' );
 }
 
 /**
@@ -132,18 +132,25 @@ function ihms_school_logo(): void {
 }
 
 /**
- * One school menu on both screen sizes.
+ * The child has one school header menu, and one Quick Links footer menu.
  *
- * Editors already manage the school's main links at Appearance -> Menus ->
- * Header Links. Primary is a compatibility fallback for older school installs;
- * never render both locations in the same header.
+ * Remove unused menu locations inherited from the parish, after the
+ * parent's after_setup_theme registration (priority 10) has finished.
+ * This only changes locations, not existing menu terms or menu items.
+ * Keep the 'header' location key so the school's assigned menu stays put.
  */
-function ihms_navigation_location(): string {
-    if ( has_nav_menu( 'header' ) ) {
-        return 'header';
-    }
+function ihms_register_school_menu_locations(): void {
+    unregister_nav_menu( 'primary' );
+    unregister_nav_menu( 'footer-involved' );
+    unregister_nav_menu( 'footer-resources' );
+    register_nav_menu( 'header', __( 'School Navigation', 'ihm-school' ) );
+    register_nav_menu( 'footer', __( 'Footer: Quick Links', 'ihm-school' ) );
+}
+add_action( 'after_setup_theme', 'ihms_register_school_menu_locations', 20 );
 
-    return has_nav_menu( 'primary' ) ? 'primary' : '';
+/** Use the one school menu for both desktop and mobile. */
+function ihms_navigation_location(): string {
+    return has_nav_menu( 'header' ) ? 'header' : '';
 }
 
 /**

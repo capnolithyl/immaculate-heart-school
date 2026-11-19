@@ -5,7 +5,7 @@ Description: A lightweight child theme for Immaculate Heart of Mary Grade School
 Author: Diocesan
 Author URI: https://diocesan.com/
 Template: ihm
-Version: 0.3.2
+Version: 0.3.3
 Text Domain: ihm-school
 Requires PHP: 8.0
 License: GNU General Public License v2 or later
@@ -47,6 +47,27 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
   height: auto;
   max-height: 5.4375rem;
   object-fit: contain;
+}
+
+/* The parent theme compiles Tailwind as unlayered CSS while the school
+ * Tailwind v4 output places responsive utilities in @layer utilities.
+ * An unlayered .hidden would therefore beat the child's lg:block even
+ * at desktop widths. Own this one critical visibility decision here. */
+.ihms-header .ihms-header__links {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .ihms-header .ihms-header__links {
+    display: block;
+    flex: 1 1 auto;
+  }
+
+  /* The school's hamburger and drawer are only for mobile. */
+  .ihms-header [data-nav-toggle],
+  .ihms-header [data-nav-drawer] {
+    display: none !important;
+  }
 }
 
 /* wp_nav_menu generates this list; desktop and mobile draw from the same
