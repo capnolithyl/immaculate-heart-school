@@ -29,9 +29,14 @@ class SchoolHeaderTests(unittest.TestCase):
     def test_single_menu_source_is_shared_by_desktop_and_mobile(self):
         self.assertIn("function ihms_navigation_location()", self.functions)
         self.assertIn("has_nav_menu( 'header' )", self.functions)
-        self.assertIn("has_nav_menu( 'primary' )", self.functions)
-        self.assertIn("'header';", self.functions)
-        self.assertIn("return has_nav_menu( 'primary' ) ? 'primary' : '';", self.functions)
+        self.assertIn("return has_nav_menu( 'header' ) ? 'header' : '';", self.functions)
+        self.assertNotIn("has_nav_menu( 'primary' )", self.functions)
+        self.assertIn("unregister_nav_menu( 'primary' )", self.functions)
+        self.assertIn("unregister_nav_menu( 'footer-involved' )", self.functions)
+        self.assertIn("unregister_nav_menu( 'footer-resources' )", self.functions)
+        self.assertIn("register_nav_menu( 'header'", self.functions)
+        self.assertIn("register_nav_menu( 'footer'", self.functions)
+        self.assertIn("ihms_register_school_menu_locations', 20", self.functions)
         self.assertIn("ihms_navigation_location()", self.desktop)
         self.assertIn("ihms_navigation_location()", self.mobile)
         self.assertIn("'theme_location' => $ihms_menu_location", self.desktop)
@@ -41,7 +46,14 @@ class SchoolHeaderTests(unittest.TestCase):
         self.assertNotIn("wp_get_nav_menu_items(", self.desktop)
 
     def test_desktop_has_inline_menu_and_no_hamburger(self):
-        self.assertIn("ihms-header__links hidden min-w-0 lg:block", self.desktop)
+        self.assertIn('class="ihms-header__links min-w-0"', self.desktop)
+        self.assertNotIn('ihms-header__links hidden', self.desktop)
+        self.assertIn("'menu_id'        => 'school-desktop-menu'", self.desktop)
+        self.assertIn(".ihms-header .ihms-header__links {\n  display: none;", self.styles)
+        self.assertIn("@media (min-width: 64rem)", self.styles)
+        self.assertIn(".ihms-header .ihms-header__links {\n    display: block;", self.styles)
+        self.assertIn(".ihms-header [data-nav-toggle]", self.styles)
+        self.assertIn(".ihms-header [data-nav-drawer]", self.styles)
         self.assertIn("'depth'          => 2", self.desktop)
         self.assertRegex(
             self.header,
